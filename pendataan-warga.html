@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pendataan Warga</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%}
+:root{
+  --bg1:#0f1223;--bg2:#181b2e;--card:#13172a;--text:#e8ebf5;--muted:#a3a9bd;
+  --primary:#6b8cff;--primary-2:#3b55f5;--secondary:#2b2f43;--outline:#2a3049;
+}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--text);
+  background:linear-gradient(120deg,var(--bg1),var(--bg2));}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--outline);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.25);padding:18px}
+.title{font-size:22px;font-weight:700;margin:4px 0 16px}
+label{display:block;font-size:13px;margin:12px 0 6px;color:var(--muted)}
+input,select,button,textarea{width:100%;padding:12px 14px;border:1px solid var(--outline);border-radius:12px;font-size:16px;background:#0f1223;color:var(--text)}
+input::placeholder,textarea::placeholder{color:#7b8198}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(107,140,255,.15)}
+.row{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:560px){.row-2{grid-template-columns:1fr 1fr}}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:14px;padding:12px 16px;font-weight:700;cursor:pointer;transition:transform .05s ease}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff}
+.btn-secondary{background:#20253a;color:#eaf0ff;border:1px solid var(--outline)}
+.btn-danger{background:#e95454;color:#fff}
+.actions{display:flex;gap:10px;margin-top:14px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.item{padding:12px;border:1px solid var(--outline);border-radius:14px;background:#0f1223}
+.item strong{display:block;margin-bottom:6px;color:#fff}
+.muted{color:var(--muted);font-size:13px}
+.badge{border:1px solid var(--outline);background:#20253a;color:#cfd6f2;border-radius:999px;padding:6px 10px;font-size:12px}
+.sticky{position:sticky;bottom:12px;background:transparent;padding-top:8px}
+.error{border-color:#e95454}
+.small{font-size:12px;color:#9aa1b7;margin-top:6px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#20253a;color:#fff;border:1px solid var(--outline);padding:12px 16px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:9999;display:none}
+.toast.show{display:block}
+.toast.success{background:#1f3a2e;border-color:#2f8f5b}
+.toast.error{background:#3a1f1f;border-color:#e95454}
+.toast.info{background:#20253a;border-color:var(--primary)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="title">Pendataan Warga</div>
+    <form id="kkForm" novalidate>
+      <div class="row">
+        <div>
+          <label>Nomor Kartu Keluarga (KK)</label>
+          <input id="kk" type="text" inputmode="numeric" placeholder="Contoh: 3174XXXXXXXXXXXX" required>
+        </div>
+        <div>
+          <label>Nama Kepala Keluarga</label>
+          <input id="namaKK" type="text" placeholder="Nama lengkap" required>
+        </div>
+        <div>
+          <label>Alamat</label>
+          <textarea id="alamat" rows="2" placeholder="Alamat lengkap" required></textarea>
+        </div>
+        <div class="row row-2">
+          <div>
+            <label>Kelurahan / Desa</label>
+            <input id="kelurahan" type="text" required>
+          </div>
+          <div>
+            <label>Kecamatan</label>
+            <input id="kecamatan" type="text" required>
+          </div>
+        </div>
+        <div>
+          <label>Nomor yang bisa dihubungi</label>
+          <input id="telepon" type="tel" inputmode="tel" placeholder="08xxxxxxxxxx" required>
+        </div>
+      <div class="row row-2">
+        <div>
+          <label>Kondisi Rumah</label>
+          <select id="kondisiRumah" required>
+            <option value="">Pilih</option>
+            <option>Mewah</option>
+            <option>Baik</option>
+            <option>Sedang</option>
+            <option>Buruk</option>
+          </select>
+        </div>
+        <div>
+          <label>Kepemilikan Rumah</label>
+          <select id="kepemilikanRumah" required>
+            <option value="">Pilih</option>
+            <option>Milik Sendiri</option>
+            <option>Sewa / Kontrak</option>
+            <option>Numpang</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label>Foto Rumah</label>
+        <input id="fotoRumah" type="file" accept="image/*" capture="environment">
+        <div id="fotoPreviewBox" style="margin-top:10px;display:none">
+          <img id="fotoPreview" alt="Preview Foto" style="width:100%;max-height:220px;object-fit:cover;border:1px solid var(--outline);border-radius:12px" />
+          <div class="muted" id="fotoInfo" style="margin-top:6px"></div>
+        </div>
+      </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" id="btnShowAnggota">Tambah Anggota Keluarga</button>
+        <button type="button" class="btn btn-primary" id="btnExport">Export ke PDF</button>
+      </div>
+      <div class="small">Semua isian wajib diisi.</div>
+    </form>
+  </div>
+
+  <div id="anggotaCard" class="card" style="margin-top:12px" hidden>
+    <div class="section-head">
+      <div class="title">Tambah Anggota Keluarga</div>
+    </div>
+    <form id="anggotaForm" novalidate>
+      <div class="row">
+        <div>
+          <label>Nama</label>
+          <input id="aNama" type="text" required>
+        </div>
+        <div>
+          <label>Nomor Induk Kependudukan (NIK)</label>
+          <input id="aNik" type="text" inputmode="numeric" required>
+        </div>
+        <div>
+          <label>Tanggal lahir</label>
+          <input id="aLahir" type="date" required>
+        </div>
+        <div>
+          <label>Hubungan keluarga</label>
+          <select id="aHubungan" required>
+            <option value="">Pilih</option>
+            <option>Ayah</option>
+            <option>Ibu</option>
+            <option>Anak</option>
+            <option>Lainnya</option>
+          </select>
+        </div>
+        <div>
+          <label>Pendidikan</label>
+          <input id="aPendidikan" type="text" required>
+        </div>
+        <div>
+          <label>Pekerjaan</label>
+          <input id="aPekerjaan" type="text" required>
+        </div>
+        <div>
+          <label>Kesehatan</label>
+          <select id="aKesehatan" required>
+            <option value="">Pilih</option>
+            <option>Sehat</option>
+            <option>Disabilitas</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" id="btnBatalAnggota">Tutup</button>
+        <button type="submit" class="btn btn-primary">Simpan Anggota</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="section-head">
+      <div class="title">Daftar Anggota Keluarga</div>
+      <div class="badge" id="anggotaCount">0 anggota</div>
+    </div>
+    <div id="anggotaList" class="list"></div>
+  </div>
+
+  <div class="sticky wrap" style="padding:0">
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+</div>
+
+<script>
+var anggota=[]
+var fotoRumahData=null
+var fotoRumahInfo=null
+function el(id){return document.getElementById(id)}
+function slugify(s){return s.toLowerCase().trim().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')||'pendataan'}
+function renderAnggota(){
+  var list=el('anggotaList');
+  list.innerHTML='';
+  for(var i=0;i<anggota.length;i++){
+    var a=anggota[i];
+    var item=document.createElement('div');
+    item.className='item';
+    var name=document.createElement('strong');
+    name.textContent=a.Nama+' • '+a.Hubungan;
+    var meta=document.createElement('div');
+    meta.className='muted';
+    meta.textContent='NIK '+a.NIK+' • Lahir '+a.TanggalLahir+' • '+a.Pendidikan+' • '+a.Pekerjaan+' • '+a.Kesehatan;
+    item.appendChild(name);
+    item.appendChild(meta);
+    list.appendChild(item);
+  }
+  el('anggotaCount').textContent=anggota.length+" anggota";
+}
+function showAnggotaForm(){
+  el('anggotaCard').hidden=false
+  el('aNama').value=''
+  el('aNik').value=''
+  el('aLahir').value=''
+  el('aHubungan').value=''
+  el('aPendidikan').value=''
+  el('aPekerjaan').value=''
+  el('aKesehatan').value=''
+}
+function hideAnggotaForm(){
+  el('anggotaCard').hidden=true
+}
+el('btnShowAnggota').addEventListener('click',showAnggotaForm)
+el('btnBatalAnggota').addEventListener('click',hideAnggotaForm)
+el('anggotaForm').addEventListener('submit',function(e){
+  e.preventDefault()
+  if(!el('anggotaForm').reportValidity())return
+  var data={
+    Nama:el('aNama').value.trim(),
+    NIK:el('aNik').value.trim(),
+    TanggalLahir:el('aLahir').value,
+    Hubungan:el('aHubungan').value,
+    Pendidikan:el('aPendidikan').value.trim(),
+    Pekerjaan:el('aPekerjaan').value.trim(),
+    Kesehatan:el('aKesehatan').value
+  }
+  anggota.push(data)
+  renderAnggota()
+  hideAnggotaForm()
+})
+el('fotoRumah').addEventListener('change',async function(e){
+  var f=e.target.files&&e.target.files[0]
+  if(!f){fotoRumahData=null;fotoRumahInfo=null;el('fotoPreviewBox').style.display='none';return}
+  var compressed=await compressImage(f)
+  fotoRumahData=compressed.dataUrl
+  fotoRumahInfo={name:f.name,type:compressed.type||f.type,sizeKB:Math.round(compressed.size/1024)}
+  el('fotoPreview').src=fotoRumahData
+  el('fotoInfo').textContent=fotoRumahInfo.name+' • '+fotoRumahInfo.type+' • '+fotoRumahInfo.sizeKB+'KB'
+  el('fotoPreviewBox').style.display='block'
+})
+function collectKK(){
+  return {
+    KK:el('kk').value.trim(),
+    NamaKepalaKeluarga:el('namaKK').value.trim(),
+    Alamat:el('alamat').value.trim(),
+    KelurahanDesa:el('kelurahan').value.trim(),
+    Kecamatan:el('kecamatan').value.trim(),
+    Telepon:el('telepon').value.trim(),
+    KondisiRumah:el('kondisiRumah').value,
+    KepemilikanRumah:el('kepemilikanRumah').value,
+    FotoRumahTersedia:fotoRumahData?"Ada":"Tidak"
+  }
+}
+async function exportPDF(){
+  setLoadingExport(true)
+  if(!el('kkForm').reportValidity()){notify('Lengkapi data kepala keluarga','error');setLoadingExport(false);return}
+  await ensurePDF()
+  var kk=collectKK()
+  var fname='data-'+slugify(kk.NamaKepalaKeluarga)+'.pdf'
+  try{
+    var jsPDF=window.jspdf&&window.jspdf.jsPDF?window.jspdf.jsPDF:null
+    if(!jsPDF){throw new Error('Library PDF tidak tersedia')}
+    var doc=new jsPDF({unit:'pt',format:'a4'})
+    var marL=40, marT=50, pageW=doc.internal.pageSize.getWidth(), maxW=pageW-marL*2
+    doc.setFontSize(18)
+    doc.text('Pendataan Warga',marL,marT)
+    doc.setFontSize(16)
+    doc.text('Nama Kepala Keluarga: '+kk.NamaKepalaKeluarga,marL,marT+24)
+    var y=marT+40
+    if(fotoRumahData){
+      var imgW=Math.min(300,maxW), imgH=imgW*0.62
+      try{doc.addImage(fotoRumahData,'JPEG',marL,y,imgW,imgH);y+=imgH+16}catch(e){}
+    }
+    var kkRows=[
+      ['Nomor KK',kk.KK],
+      ['Alamat',kk.Alamat],
+      ['Kelurahan/Desa',kk.KelurahanDesa],
+      ['Kecamatan',kk.Kecamatan],
+      ['Telepon',kk.Telepon],
+      ['Kondisi Rumah',kk.KondisiRumah],
+      ['Kepemilikan Rumah',kk.KepemilikanRumah],
+      ['Foto Rumah',kk.FotoRumahTersedia]
+    ]
+    if(doc.autoTable){
+      doc.autoTable({startY:y,head:[['Field','Nilai']],body:kkRows,styles:{fontSize:10},theme:'grid',margin:{left:marL,right:marL}})
+      y=doc.lastAutoTable.finalY+20
+      var agHead=[['Nama','NIK','Tanggal Lahir','Hubungan','Pendidikan','Pekerjaan','Kesehatan']]
+      var agBody=[]
+      for(var j=0;j<anggota.length;j++){
+        var ag=anggota[j]
+        agBody.push([ag.Nama,ag.NIK,ag.TanggalLahir,ag.Hubungan,ag.Pendidikan,ag.Pekerjaan,ag.Kesehatan])
+      }
+      doc.autoTable({startY:y,head:agHead,body:agBody,styles:{fontSize:10},theme:'grid',margin:{left:marL,right:marL}})
+    }else{
+      doc.setFontSize(12)
+      doc.text('Nomor KK: '+kk.KK,marL,y);y+=16
+    }
+    doc.save(fname)
+    notify('Berhasil mengunduh '+fname,'success')
+    resetAll()
+  }catch(err){
+    notify('Gagal mengekspor: '+(err&&err.message?err.message:'Unknown'),'error')
+  }
+  setLoadingExport(false)
+}
+el('btnExport').addEventListener('click',exportPDF)
+function resetAll(){
+  anggota=[]
+  el('kkForm').reset()
+  el('anggotaForm').reset()
+  renderAnggota()
+  hideAnggotaForm()
+  fotoRumahData=null
+  fotoRumahInfo=null
+  el('fotoPreviewBox').style.display='none'
+}
+function notify(msg,type){
+  var t=el('toast')
+  t.className='toast '+(type||'info')+' show'
+  t.textContent=msg
+  clearTimeout(window.__toastTimer)
+  window.__toastTimer=setTimeout(function(){t.className='toast';t.textContent=''},3000)
+}
+function setLoadingExport(b){
+  var btn=el('btnExport')
+  btn.disabled=!!b
+  btn.textContent=b?'Mengekspor…':'Export ke PDF'
+}
+function ensurePDF(){
+  return new Promise(function(resolve){
+    function done(){resolve()}
+    if(window.jspdf&&window.jspdf.jsPDF&&window.jspdf&&window.jspdf.jsPDF.prototype){
+      if(typeof window.jspdf.jsPDF.prototype.autoTable==='function')return resolve()
+    }
+    var s=document.createElement('script')
+    s.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'
+    s.onload=function(){
+      var a=document.createElement('script')
+      a.src='https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.28/dist/jspdf.plugin.autotable.min.js'
+      a.onload=function(){done()}
+      a.onerror=function(){done()}
+      document.head.appendChild(a)
+    }
+    s.onerror=function(){
+      var s2=document.createElement('script')
+      s2.src='https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js'
+      s2.onload=function(){done()}
+      s2.onerror=function(){notify('Gagal memuat library PDF','error');done()}
+      document.head.appendChild(s2)
+    }
+    document.head.appendChild(s)
+  })
+}
+function compressImage(file){
+  return new Promise(function(resolve){
+    var reader=new FileReader()
+    reader.onload=function(){
+      var img=new Image()
+      img.onload=function(){
+        var maxW=1024,maxH=1024
+        var w=img.width,h=img.height
+        var ratio=Math.min(maxW/w,maxH/h,1)
+        var cw=Math.round(w*ratio),ch=Math.round(h*ratio)
+        var canvas=document.createElement('canvas')
+        canvas.width=cw;canvas.height=ch
+        var ctx=canvas.getContext('2d')
+        ctx.drawImage(img,0,0,cw,ch)
+        var dataUrl=canvas.toDataURL('image/jpeg',0.8)
+        var bstr=atob(dataUrl.split(',')[1])
+        resolve({dataUrl:dataUrl,type:'image/jpeg',size:bstr.length})
+      }
+      img.src=reader.result
+    }
+    reader.readAsDataURL(file)
+  })
+}
+</script>
+</body>
+</html>
