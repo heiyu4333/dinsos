@@ -1,0 +1,44 @@
+:root{--bg:#f9fafb;--fg:#0f172a;--muted:#64748b;--primary:#22d3ee;--primary-contrast:#ffffff;--secondary:#f1f5f9;--surface:#ffffff;--border:#e5e7eb;--chip:#eef2ff;--toast-bg:#111827;--danger:#ef4444;--success:#22c55e;--warn:#f59e0b}
+[data-theme="dark"]{--bg:#121212;--fg:#E0E0E0;--muted:#B0BEC5;--primary:#26c6da;--primary-contrast:#0b0b0b;--secondary:#1E1E1E;--surface:#1E1E1E;--border:#2a2a2a;--chip:#263238;--toast-bg:#0f0f0f}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--fg)}
+.app-header{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem}
+.app-header h1{font-size:1.1rem;margin:0}
+.net-status{display:inline-block;padding:.3rem .5rem;border-radius:.5rem;font-size:.8rem;margin-right:.5rem}
+.net-status.online{background:var(--success);color:#fff}
+.net-status.offline{background:var(--warn);color:#1f2937}
+.container{padding:1rem 1rem 5rem}
+.view{display:none;max-width:1000px;margin:0 auto}
+.view.active{display:block}
+h2{font-size:1rem;margin:.5rem 0 1rem}
+.form-group{margin-bottom:.75rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+label{display:block;font-size:.85rem;margin-bottom:.35rem;color:var(--muted)}
+input[type=text],input[type=tel],input[type=number],select,textarea{width:100%;padding:.6rem .7rem;border:1px solid var(--border);border-radius:.6rem;background:var(--surface);color:var(--fg);font-size:.95rem}
+textarea{min-height:90px;resize:vertical}
+.image-preview{margin-top:.5rem;height:160px;border:1px dashed var(--border);border-radius:.6rem;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--secondary)}
+.image-preview img{max-width:100%;max-height:100%;display:block}
+.actions{display:flex;gap:.5rem;margin-top:.75rem}
+.btn{appearance:none;border:1px solid transparent;border-radius:.8rem;padding:.7rem 1rem;font-size:.95rem;transition:all .15s ease}
+.btn[disabled]{opacity:.6;cursor:not-allowed}
+.btn.primary{background:var(--primary);color:var(--primary-contrast)}
+.btn.secondary{background:var(--secondary);color:#0f172a}
+.btn.danger{background:var(--danger);color:#fff}
+.btn:hover{filter:brightness(1.05)}
+input,select,textarea{outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(34,211,238,.25)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);gap:.25rem;padding:.25rem .5rem;height:76px;padding-bottom:calc(env(safe-area-inset-bottom) + .25rem)}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;border:none;background:transparent;color:var(--fg);padding:.25rem;border-radius:.8rem;transition:all .15s ease;position:relative}
+.nav-item .icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.nav-item .label{font-size:.72rem;line-height:1;color:var(--muted)}
+.nav-item:hover .icon{color:var(--primary);transform:scale(1.05)}
+.nav-item:active .icon{transform:scale(0.98)}
+.nav-item.active .icon{color:var(--primary)}
+.nav-item.active::after{content:"";position:absolute;bottom:4px;width:22px;height:3px;border-radius:2px;background:var(--primary)}
+.kk-list,.member-list,.summary-list{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem}
+.kk-card,.member-card,.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:.8rem;padding:.9rem;box-shadow:0 6px 14px rgba(2,6,23,.06)}
+.kk-header{margin:.5rem 0;padding:.5rem .75rem;border-radius:.6rem;background:var(--chip);color:var(--fg)}
+.toast{position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);background:var(--toast-bg);color:#fff;padding:.6rem .9rem;border-radius:.6rem;box-shadow:0 10px 25px rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media (max-width:640px){.form-grid{grid-template-columns:1fr}}
